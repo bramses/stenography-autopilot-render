@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { res } from '../example'
+import { useState, useEffect } from 'react'
 import path from 'path'
 // import Editor from 'react-simple-code-editor';
 
@@ -11,19 +12,24 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css'
-import parse from 'html-react-parser';
+import 'prismjs/plugins/line-highlight/prism-line-highlight'
 
 
 export default function Home(props) {
   const explanations = res.map(codeblock => codeblock.stenographyResponse.pm)
 
-  const highlighted = Prism.highlight(props.code, Prism.languages.javascript)
+  useEffect(() => {
+    Prism.highlightAll();
+  }, []);
+
+  // const highlighted = Prism.highlight(props.code, Prism.languages.javascript)
 
   return (
     <div className="container">
-      <div className="column">
-        
-        <pre><code>{parse(highlighted)}</code></pre>
+      <div className="column" style={{ maxWidth: 900 }}>
+        <pre data-line='6-12' data-src="prismjs/plugins/line-highlight/prism-line-highlight">
+          <code className='language-javascript'>{props.code}</code>
+        </pre>
       </div>
       <div className="column">
         Explanation
