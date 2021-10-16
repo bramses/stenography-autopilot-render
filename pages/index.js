@@ -11,11 +11,12 @@ import Link from 'next/link'
 
 export default function Home(props) {
 
+  console.log(props.posts)
 
   return (
     <div className="container">
       <ul>
-        <li>file 1</li>
+        <li><Link href="/sideview"><a>test</a></Link></li>
         <li>file 2</li>
         <li>file 3</li>
       </ul>
@@ -45,20 +46,17 @@ export async function getStaticProps() {
   console.log(filenames)
 
 
-  const posts = []
-  // const posts = filenames.map(async (filename) => {
-  //   const filePath = path.join(postsDirectory, filename)
-  //   const fileContents = await fs.readFile(filePath, 'utf8')
-  //   console.log(filePath)
+  const posts = filenames.map(async (filename) => {
+    const fileContents = await fs.promises.readFile(filename, 'utf8')
 
-  //   // Generally you would parse/transform the contents
-  //   // For example you can transform markdown to HTML here
+    // Generally you would parse/transform the contents
+    // For example you can transform markdown to HTML here
 
-  //   return {
-  //     filename,
-  //     content: fileContents,
-  //   }
-  // })
+    return {
+      filename,
+      content: fileContents,
+    }
+  })
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   return {
