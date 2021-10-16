@@ -34,11 +34,9 @@ export default function Sideview(props) {
     res.forEach(codeBlock => {
         const explanation = codeBlock.stenographyResponse.pm
         const startLine = codeBlock.startLine
-        // console.log('yo')
-        // console.log(startLine)
-        // console.log(explanation)
+
        
-        a[startLine - 1] = explanation
+        a[startLine - 1] = explanation.replace(/\n/g, ' ')
         
     })
 
