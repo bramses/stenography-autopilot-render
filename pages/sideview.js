@@ -1,7 +1,5 @@
 import path from 'path'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
-import { res } from '../example'
-
 
 export default function Sideview(props) {
 

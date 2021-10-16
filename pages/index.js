@@ -5,61 +5,65 @@ import { res } from '../example'
 import { useState, useEffect } from 'react'
 import path from 'path'
 // import Editor from 'react-simple-code-editor';
+import Link from 'next/link'
 
-
-import Prism from 'prismjs';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism-tomorrow.css'
-import 'prismjs/plugins/line-highlight/prism-line-highlight'
 
 
 export default function Home(props) {
-  const explanations = res.map(codeblock => codeblock.stenographyResponse.pm)
 
-  useEffect(() => {
-    Prism.highlightAll();
-  }, []);
-
-  // const highlighted = Prism.highlight(props.code, Prism.languages.javascript)
 
   return (
     <div className="container">
-      <div className="column" style={{ maxWidth: 900 }}>
-        <pre data-line='6-12' data-src="prismjs/plugins/line-highlight/prism-line-highlight">
-          <code className='language-javascript'>{props.code}</code>
-        </pre>
-      </div>
-      <div className="column">
-        Explanation
-
-      </div>
-      
-      <style jsx>{`
-          .container {
-            display: flex;
-          }
-          .column {
-            flex: 1;
-          }
-      `}</style>
+      <ul>
+        <li>file 1</li>
+        <li>file 2</li>
+        <li>file 3</li>
+      </ul>
     </div>
   )
 }
 
-export async function getStaticProps(context) {
-  const fs = require('fs/promises');
 
-  const filePath = path.join(process.cwd(), 'example-code.js');
-  console.log(filePath);
-  const fileData = await fs.readFile(filePath, {
-    encoding: 'utf-8'
-  });
 
+export async function getStaticProps() {
+  const fs = require('fs');
+
+  const readDirRecursive = async (filePath) => {
+    const dir = await fs.promises.readdir(filePath);
+    const files = await Promise.all(dir.map(async realtivePath => {
+        const absolutePath = path.join(filePath, realtivePath);
+        const stat = await fs.promises.lstat(absolutePath);
+  
+        return stat.isDirectory() ? readDirRecursive(absolutePath) : absolutePath;
+    }));
+  
+    return files.flat();
+  }
+
+  const postsDirectory = path.join(process.cwd(), 'code-blocks')
+  const filenames = await readDirRecursive(postsDirectory)
+  console.log(filenames)
+
+
+  const posts = []
+  // const posts = filenames.map(async (filename) => {
+  //   const filePath = path.join(postsDirectory, filename)
+  //   const fileContents = await fs.readFile(filePath, 'utf8')
+  //   console.log(filePath)
+
+  //   // Generally you would parse/transform the contents
+  //   // For example you can transform markdown to HTML here
+
+  //   return {
+  //     filename,
+  //     content: fileContents,
+  //   }
+  // })
+  // By returning { props: { posts } }, the Blog component
+  // will receive `posts` as a prop at build time
   return {
     props: {
-      code: fileData.toString(),
+      posts: await Promise.all(posts),
     },
-  };
+  }
 }
