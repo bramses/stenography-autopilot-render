@@ -1,4 +1,3 @@
-import { parseDiff, Diff, Hunk, getChangeKey } from 'react-diff-view';
 import path from 'path'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 import { res } from '../example'
@@ -6,66 +5,73 @@ import { res } from '../example'
 
 export default function Sideview(props) {
 
-    let explStr = ''
-    let explArr = []
-
+    const hydratedCodeBlocks = props.hydratedCodeBlocks
+    console.log(hydratedCodeBlocks)
+    let code = props.code;
+    let codeArr = code.split('\n')
     
-
-    console.log(explArr)
-
-
-    let oldCode = props.code;
-    let oldCodeArr = oldCode.split('\n')
+    const codeArrLen = codeArr.length
     
-    const oldCodeArrLen = oldCodeArr.length
-    
-    oldCodeArr = oldCodeArr.map((item, index) => {
+    codeArr = codeArr.map((item, index) => {
         if (item === '') item = '-'
         return item
     })
-    oldCode = oldCodeArr.join('\n')
-    
-    console.log(oldCodeArrLen)
-    console.log(oldCodeArr)
+    code = codeArr.join('\n')
 
 
-
-    let a = new Array(oldCodeArrLen); for (let i=0; i<oldCodeArrLen; ++i) a[i] = '-';
-    res.forEach(codeBlock => {
+    let hLines = []
+    let explanations = new Array(codeArrLen); for (let i=0; i<codeArrLen; ++i) explanations[i] = '-';
+    hydratedCodeBlocks.forEach(codeBlock => {
         const explanation = codeBlock.stenographyResponse.pm
         const startLine = codeBlock.startLine
+        const endLine = codeBlock.endLine
 
+        const localHighlights = []
+        for (let i = startLine; i <= endLine; i++) {
+            const highlightLine = `L-${i}`
+            localHighlights.push(highlightLine)
+        }
+        hLines = hLines.concat(localHighlights)
+        
        
-        a[startLine - 1] = explanation.replace(/\n/g, ' ')
+        explanations[startLine - 1] = explanation.replace(/\n/g, ' ')
         
     })
 
     
-    console.log(a.length)
-    console.log(a)
-    const newCode = a.join('\n');
+    const newCode = explanations.join('\n');
 
-    // const hLines = ['L-12']
 
     return (
-        <ReactDiffViewer oldValue={oldCode} codeFoldMessageRenderer={(opt) => {
-            console.log(opt)
-        }} disableWordDiff={true} newValue={newCode} splitView={true} leftTitle={"Code"} compareMethod={DiffMethod.TRIMMED_LINES} showDiffOnly={false} rightTitle={"Stenography Explanations"} />
+        <div>
+            {/* <input className="input" onKeyDown={() => {window.location.href = 'http://localhost:3000/sideview#line-56' }}  /> */}
+            <ReactDiffViewer oldValue={code} onLineNumberClick={(lineId) => console.log(lineId)} highlightLines={hLines} disableWordDiff={true} newValue={newCode} splitView={true} leftTitle={"Code"} compareMethod={DiffMethod.TRIMMED_LINES} showDiffOnly={false} rightTitle={"Stenography Explanations"} />
+            {/* <style jsx>{`
+                .input {
+                    width: 100vw;
+                }
+            `}</style> */}
+        </div>
       )
 }
 
 export async function getStaticProps(context) {
     const fs = require('fs/promises');
 
-    const filePath = path.join(process.cwd(), 'example-code.js');
-    console.log(filePath);
-    const fileData = await fs.readFile(filePath, {
+    const codeFilePath = path.join(process.cwd(), 'example-code.js');
+    const fileData = await fs.readFile(codeFilePath, {
+        encoding: 'utf-8'
+    });
+
+    const explanationFilePath = path.join(process.cwd(), 'example.json');
+    const explanationFileData = await fs.readFile(explanationFilePath, {
         encoding: 'utf-8'
     });
 
     return {
         props: {
             code: fileData.toString(),
+            hydratedCodeBlocks: JSON.parse(explanationFileData)
         },
     };
 }
