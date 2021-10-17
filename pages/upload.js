@@ -95,7 +95,7 @@ export default function Upload () {
                 Upload a Javascript file to the server.
             </p>
             <form id="my-form" onSubmit={submitFile}>
-                <input type="file" name="file" onChange={e => setFile(e.target.files)} />
+                <input type="file" accept=".js" name="file" onChange={e => setFile(e.target.files)} />
                 <br />
                 <br />
                 <input type="text" onChange={e => setAPIKey(e.target.value)} name="api_key" placeholder="Stenography API Key" />
