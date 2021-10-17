@@ -19,6 +19,7 @@ export default function Home({ posts }) {
               </a>
             </Link>
             <p><a style={{ textDecoration: 'underline', color: 'blue '}} target="_blank" rel="noreferrer" href="https://stenography.dev/">Powered by Stenography</a></p>
+            <p><a style={{ textDecoration: 'underline', color: 'blue '}} target="_blank" rel="noreferrer" href="https://github.com/bramses/stenography-autopilot-render">GitHub</a></p>
             <h1>{post[0].filename}</h1>
             <Sideview  hydratedCodeBlocks={JSON.parse(post[1].content)} code={post[0].content}/>
           </div>
