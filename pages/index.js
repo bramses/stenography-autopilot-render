@@ -1,31 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { res } from '../example'
-import { useState, useEffect } from 'react'
 import path from 'path'
-// import Editor from 'react-simple-code-editor';
 import Link from 'next/link'
 import Sideview from './sideview'
 import * as _ from 'lodash'
 
-
-
 export default function Home({ posts }) {
-
-  console.log(posts.length)
-
-
 
   return (
     <div className="container">
 
         {posts.map((post) => (
-          <div key="idk">
+          <div key="diff-key">
+            <Link href="/upload">
+              <a style={{ color: 'blue', textDecoration: 'underline' }}>
+                <h1>Make Your Own!</h1>
+              </a>
+            </Link>
+            <p><a style={{ textDecoration: 'underline', color: 'blue '}} target="_blank" rel="noreferrer" href="https://stenography.dev/">Powered by Stenography</a></p>
             <h1>{post[0].filename}</h1>
             <Sideview  hydratedCodeBlocks={JSON.parse(post[1].content)} code={post[0].content}/>
           </div>
         ))}
+
      
     </div>
   )
@@ -66,15 +64,6 @@ export async function getStaticProps() {
   })
 
 
-
-
-  //   // Generally you would parse/transform the contents
-  //   // For example you can transform markdown to HTML here
-
-  //   return files
-  // })
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
   return {
     props: {
       posts: await Promise.all(wrapper),

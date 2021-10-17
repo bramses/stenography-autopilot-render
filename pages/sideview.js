@@ -3,7 +3,7 @@ import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 
 export default function Sideview(props) {
 
-    const hydratedCodeBlocks = props.hydratedCodeBlocks
+    const hydratedCodeBlocks = props.hydratedCodeBlocks || []
     let code = props.code;
     let codeArr = code.split('\n')
     
@@ -18,6 +18,7 @@ export default function Sideview(props) {
 
     let hLines = []
     let explanations = new Array(codeArrLen); for (let i=0; i<codeArrLen; ++i) explanations[i] = '-';
+
     hydratedCodeBlocks.forEach(codeBlock => {
         const explanation = codeBlock.stenographyResponse.pm
         const startLine = codeBlock.startLine
