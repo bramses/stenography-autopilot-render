@@ -4,7 +4,7 @@ import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 export default function Sideview(props) {
 
     const hydratedCodeBlocks = props.hydratedCodeBlocks || []
-    let code = props.code;
+    let code = props.code || '';
     let codeArr = code.split('\n')
     
     const codeArrLen = codeArr.length

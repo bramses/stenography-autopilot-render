@@ -13,7 +13,7 @@ export default function Split(props) {
         const startLine = codeBlock.startLine
 
        
-        a[startLine - 1] = explanation.replaceAll('\n', ' ')
+        a[startLine - 1] = explanation.replace(/\n/g, ' ')
         
     })
 
