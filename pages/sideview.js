@@ -1,10 +1,9 @@
-import path from 'path'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
+
 
 export default function Sideview(props) {
 
     const hydratedCodeBlocks = props.hydratedCodeBlocks
-    console.log(hydratedCodeBlocks)
     let code = props.code;
     let codeArr = code.split('\n')
     
@@ -53,23 +52,3 @@ export default function Sideview(props) {
       )
 }
 
-export async function getStaticProps(context) {
-    const fs = require('fs/promises');
-
-    const codeFilePath = path.join(process.cwd(), 'example-code.js');
-    const fileData = await fs.readFile(codeFilePath, {
-        encoding: 'utf-8'
-    });
-
-    const explanationFilePath = path.join(process.cwd(), 'example.json');
-    const explanationFileData = await fs.readFile(explanationFilePath, {
-        encoding: 'utf-8'
-    });
-
-    return {
-        props: {
-            code: fileData.toString(),
-            hydratedCodeBlocks: JSON.parse(explanationFileData)
-        },
-    };
-}
