@@ -4,6 +4,7 @@ import { res } from '../example'
 
 
 export default function Split(props) {
+    if (!props.code) props.code = ''
 
     const codeLength = props.code.split("\n").length;
     let a = new Array(codeLength); for (let i=0; i < codeLength; ++i) a[i] = '-';
